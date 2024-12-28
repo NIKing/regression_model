@@ -1,0 +1,1 @@
+from .SquareLoss import SquareLoss
