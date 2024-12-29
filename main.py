@@ -2,9 +2,7 @@ from models import PointModel
 from optims import SGD
 from loss import SquareLoss
 
-model = PointModel()
-
-optimizer = SGD(model.get_parameters(), lr = 1e-5) 
+model = PointModel(lr = 1e-5)
 loss = SquareLoss(model)
 
 def loss_callback(predict, target):
@@ -18,20 +16,14 @@ def train(train_dataset):
 
             features, results = train_dataset[j]
 
-            outputs = model(features, lr = 1e-5)
+            outputs = model(features)
             
             # 手动计算损失函数 
             loss = loss_callback(outputs, results)
 
-            # 清空梯度
-            optimizer.zero_grad()
-
             # 反向传播-计算梯度
             loss.backward()
             
-            # 更新参数(并非是更新梯度)
-            optimizer.step()
-
             print(loss)
 
         break

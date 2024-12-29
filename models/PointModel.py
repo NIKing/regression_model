@@ -69,8 +69,10 @@ class OutputLayer():
         return net_input
 
 class PointModel(Model):
-    def __init__(self):
+    def __init__(self, lr = 0.0):
         super(PointModel, self).__init__()
+     
+        self.learning_rate = lr
 
         self.h1 = HiddenLayer()
         self.h2 = OutputLayer()

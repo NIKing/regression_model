@@ -17,14 +17,14 @@ class Loss():
         #return self.
 
     def backward(self):
-        """反向传播的核心是通过损失函数/权重，得到梯度值"""
+        """反向传播的计算方式是通过损失函数/权重，得到梯度值"""
 
         next_layer_error = 0.0
         next_layer_weight = []
         
-        weight_items = list(self.model.parameters['weight'].items())
+        weight_items = list(self.model.parameters['weight'].values())
         input_items = list(self.model.inputs.items())
-        layer_items = list(self.model.layers.items())
+        layer_items = list(self.model.layers.values())
         
         print(input_items)
         # 从后向前计算梯度
@@ -35,20 +35,22 @@ class Loss():
                 layer_error = self.loss 
             else:
                 layer_error = self.calculate_layer_error(layer_items[i], next_layer_error, next_layer_weight)
-            
+           
+            # 获取当前层和上一层的输出结果
             current_layer_num, current_input = input_items[i]
             last_layer_num, last_input = input_items[i - 1]
             
             # 计算梯度：当前层误差值 * 上一层的输出
             layer_gradient = layer_error * last_input
+            print(f'第{i}层的权重:', weight_items[i])
             print(f'第{i}层的梯度:', layer_gradient)
 
             # 更新参数
             current_weight = weight_items[i]
-            new_weight = current_weight - self.model.learing_rate * layer_gradient
+            new_weight = current_weight - [self.model.learning_rate * gradient for gradient in layer_gradient]
             
             self.model.update_parameters(current_layer_num, new_weight)
             
-            # 记录信息，用于计算上一层的误差，不过，需要记录新的权重还是之前的权重？
+            # 记录信息，用于计算上一层的误差
             next_layer_error = layer_error
             next_layer_weight = current_weight
