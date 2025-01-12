@@ -1,5 +1,4 @@
 from models import PointModel
-from optims import SGD
 from loss import SquareLoss
 
 model = PointModel(lr = 1e-5)
@@ -15,7 +14,6 @@ def train(train_dataset):
         for j in range(len(train_dataset)):
 
             features, results = train_dataset[j]
-
             outputs = model(features)
             
             # 手动计算损失函数 
@@ -24,7 +22,7 @@ def train(train_dataset):
             # 反向传播-计算梯度
             loss.backward()
             
-            print(loss)
+            print('')
 
         break
 
