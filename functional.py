@@ -1,3 +1,5 @@
+import numpy as np
+
 class Functional(): 
     @staticmethod
     def ReLU(net_input):

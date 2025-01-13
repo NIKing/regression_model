@@ -1,2 +1,2 @@
-from LinearLayer import LinearLayer
-from InputLayer import InputLayer
+from .LinearLayer import LinearLayer
+from .InputLayer import InputLayer

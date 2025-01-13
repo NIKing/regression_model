@@ -27,21 +27,24 @@ class Loss():
         layer_items = list(self.model.layers.items())
         
         # 从后向前计算梯度
-        for i in range(len(layer_items) - 1, 0, -1):
+        for i in range(len(layer_items) - 1, -1, -1):
             layer_number, layer = layer_items[i]
             
             # 首先计算【输出层】的误差, 这个在外部已经计算过，直接拿过来用
             if i == len(layer_items) - 1:
-                layer_error = np.array(self.loss_error)
+                layer_error = self.loss_error
             else:
                 # 从下一层网络中，计算出误差
                 layer_error = self.calculate_layer_error(layer, next_layer_error, next_layer_weight)
-            
             #print('当前层的误差', layer_error, layer_error.shape)
+           
 
             # 获取上一层的输出结果
-            last_input = layer_items[i - 1][1].output
-            #print(f'第{i-1}层输出值', last_input.T, last_input.T.shape)
+            if i == 0:
+                last_input = self.model.in_features
+            else:
+                last_input = layer_items[i - 1][1].output
+            #print(f'上一层输出值', last_input.T, last_input.T.shape)
             #print('')
 
             # 计算梯度：当前层误差值 * 上一层的输出; 需要保证形状对齐; 

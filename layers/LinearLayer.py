@@ -1,3 +1,9 @@
+import math
+import random
+
+import numpy as np
+from functional import Functional
+
 class LinearLayer():
     def __init__(self, input_dim = 6, output_dim= 6, activation = 'ReLU'):
 
@@ -29,7 +35,7 @@ class LinearLayer():
         """这是代表神经元函数，每个输入都需要与权重参数发生线性变换，再经过非线性变换，最后输出"""
         net_input = self.affine_fn(features)
         output = self.activation_fn(net_input)
-        
+
         self.net_input = net_input
         self.output = output
 

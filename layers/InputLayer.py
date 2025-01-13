@@ -1,3 +1,5 @@
+import numpy as np
+
 class InputLayer():
     def __init__(self, input_dim = 6, output_dim= 6):
         self.output = None
