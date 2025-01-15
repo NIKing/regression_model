@@ -3,7 +3,7 @@ class Model():
         self.layers = {}
         self.parameters = {'weight': {}}
 
-        self.learning_reate = 1e-5
+        self.learning_reate = 1e-3
 
     def __call__(self, input_ids):
         return self.forward(input_ids)
@@ -15,5 +15,8 @@ class Model():
         return self.parameters
 
     def update_parameters(self, layer_num, weights):
+        """更新权重参数"""
+        #print(layer_num, weights)
+
         self.layers[layer_num].weight_matrix = weights
         self.parameters['weight'][layer_num] = weights
