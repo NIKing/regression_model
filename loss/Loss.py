@@ -44,7 +44,9 @@ class Loss():
                 last_input = self.model.in_features
             else:
                 last_input = layer_items[i - 1][1].output
-            #print(f'上一层输出值', last_input.T, last_input.T.shape)
+            
+            #print(f'上一侧输出值', last_input, last_input.shape)
+            #print(f'上一层输出值T', last_input.T, last_input.T.shape)
             #print('')
 
             # 计算梯度：当前层误差值 * 上一层的输出; 需要保证形状对齐; 

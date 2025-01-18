@@ -33,7 +33,7 @@ class PointModel(Model):
         #h_0 = self.h0(features)
 
         self.in_features = features
-        
+
         # 第一层
         h_1 = self.h1(features)
         #print(f'h_1={h_1}')

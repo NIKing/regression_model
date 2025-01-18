@@ -3,12 +3,13 @@ import numpy as np
 
 from models import PointModel
 from loss import SquareLoss
+from dataloader import DataLoader
 
 seed = 40
 random.seed(seed)
 np.random.seed(seed)
 
-model = PointModel(lr = 5e-3)
+model = PointModel(lr = 3e-3)
 loss = SquareLoss(model)
 
 def loss_callback(predict, target):
@@ -16,11 +17,25 @@ def loss_callback(predict, target):
 
 def train(train_dataset):
     # 迭代训练，用于查看损失函数变化
-    for i in range(3):
-        for j in range(len(train_dataset)):
+    for i in range(2):
+
+        train_data = DataLoader(train_dataset, shuffle=True, batch_size = 2)
+        iter_data = iter(train_data)
+        batch_data = next(iter_data)
+
+        batch_num = 0
+        while train_data.is_next():
+         
+            features, results = zip(*batch_data)
+
+            features = np.array(features, dtype=np.float)
+            results = np.array(results, dtype=np.float)
             
-            features, results = train_dataset[j]
-            outputs = model(np.array([features]))
+            #print(features, features.shape)
+            #print(results, results.shape)
+
+            # 模型预测
+            outputs = model(features)
             
             # 手动计算损失函数 
             loss = loss_callback(outputs, results)
@@ -28,12 +43,13 @@ def train(train_dataset):
             # 反向传播-计算梯度
             loss.backward()
             
-            print(f'epoch:{i}; batch_size:{j}; loss:{loss.loss}; loss_error:{loss.loss_error}')
+            print(f'epoch:{i}; batch_size:{batch_num}; loss:{loss.loss}; loss_error:{loss.loss_error}')
             #print('')
+
+            batch_data = next(iter_data)
 
 
 def test(test_dataset):
-
     for i in range(len(test_dataset)):
         features, result = test_dataset[i]
         output = model(np.array([features]))
@@ -59,6 +75,7 @@ if __name__ == '__main__':
 
     # 这个训练的很像是回归模型呀，线性的回归模型？？因为预测的是实数
     train(train_dataset)
+    
     test(test_dataset)
 
 
