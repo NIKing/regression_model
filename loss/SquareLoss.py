@@ -10,13 +10,19 @@ class SquareLoss(Loss):
 
         self.loss = 0.0
         self.loss_error = [0.0]
+        self.batch_size = 0
 
     def __call__(self, predict, target):
-        #print(f'predict:{predict}, {predict.shape}')
-        #print(f'target:{target}')
+        print(f'predict:{predict.shape}')
+        print(f'predict:{predict}')
+
+        print(f'target:{target.shape}')
+        print(f'target:{target}')
+
+        #predict = predict.reshape(-1, 1)
+        #target = target.reshape(-1)
         
-        predict = predict.reshape(-1, 1)
-        target = target.reshape(-1)
+        self.batch_size = list(predict.shape)[0]
         
         # 0.5 这个系数，本身就是罚项，有助于损失值不上溢，但，不是必须的
         self.loss = np.mean(0.5 * (predict - target) ** 2)
@@ -25,9 +31,12 @@ class SquareLoss(Loss):
         # 貌似一切张量的计算，都是以二维矩阵形式计算，而不是更高维度或更低维度 -- 2025年1月12日
         # 对于上面“一切张量的计算，都是以二维形式来处理”这个说法做出更正，在"全连接层"往往是以2维方式计算，但是在CNN, RNN, Transformer和Attention等结构中并非如此，实际张量维度会更高。
         # 而现在是手搓基础模型，还是以全连接层为主，因此，整个模型从输入到输出的维度都保持在2维即可
-        self.loss_error = np.mean(predict - target)
+        self.loss_error = predict - target
         #print(f'loss:{self.loss}')
         #print(f'loss_error:{self.loss_error}')
+        #print(f'loss_error:{(predict - target) / self.batch_size}')
+        #print(f'loss_error:{np.mean(self.loss_error, -1)}')
+        #print(type(self.loss_error))
         #print('!'*30)
 
         # 损失值获得的标量是不是有问题？还是回归模型的都这样？

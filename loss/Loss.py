@@ -23,7 +23,6 @@ class Loss():
         next_layer_error = 0.0
         next_layer_weight = []
         
-        weight_values = list(self.model.parameters['weight'].values())
         layer_items = list(self.model.layers.items())
         
         # 从后向前计算梯度
@@ -36,38 +35,38 @@ class Loss():
             else:
                 # 从下一层网络中，计算出误差
                 layer_error = self.calculate_layer_error(layer, next_layer_error, next_layer_weight)
-            #print('当前层的误差', layer_error, layer_error.shape)
+            
+            #print(f'第{i}层误差', layer_error.shape)
            
 
-            # 获取上一层的输出结果
+            # 获取上一层的输出结果, 若到了第一层，直接取输入值
             if i == 0:
-                last_input = self.model.in_features
+                current_input = self.model.in_features
             else:
-                last_input = layer_items[i - 1][1].output
+                current_input = layer.input
             
-            #print(f'上一侧输出值', last_input, last_input.shape)
-            #print(f'上一层输出值T', last_input.T, last_input.T.shape)
-            #print('')
+            #print(f'第{i}层输入T', current_input.T.shape)
 
             # 计算梯度：当前层误差值 * 上一层的输出; 需要保证形状对齐; 
-            # last_input.T.shape = (in_features, batch_size), layer_error.shape = (batch_size, out_features); 
-            # layer_gradient.shape = (in_features, batch_size) * (batch_size, out_features) = (in_features, out_features)
-            layer_gradient = np.dot(last_input.T, layer_error)
-            current_weight = np.array(weight_values[i])
-            #print(f'第{i}层的梯度:', layer_gradient)
-            #print(f'第{i}层的权重:', current_weight)
+            layer_gradient = np.dot(current_input.T, layer_error)
+            layer_gradient /= self.batch_size 
+
+            current_weight = np.array(layer.weight_matrix)
+            #print(f'第{i}层的梯度:', layer_gradient.shape)
+            #print(f'第{i}层的权重:', current_weight.shape)
 
             # 更新参数
             new_weight = current_weight - self.model.learning_rate * layer_gradient
 
             # 恢复权重形状，保存到网络层
-            #print(f'第{i}层的新权重', new_weight)
-            
+            #print(f'第{i}层的新权重', new_weight.shape)
             self.model.update_parameters(layer_number, new_weight)
             
             # 记录当前信息，用于误差传播
             next_layer_error = layer_error
-            next_layer_weight = new_weight 
+            next_layer_weight = current_weight
+
+            #print('*'*80)
 
         
                 

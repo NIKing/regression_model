@@ -11,20 +11,14 @@ class PointModel(Model):
         # 若无必要，勿增实体。第0层没有神经元，就不要申明网络层次，让模型去学习他
         #self.h0 = InputLayer(input_dim = 1, output_dim = 6)
         self.h1 = LinearLayer(input_dim = 1, output_dim = 6)
-        self.h2 = LinearLayer(input_dim = 6, output_dim = 1)
+        self.h2 = LinearLayer(input_dim = 6, output_dim = 6)
+        self.h3 = LinearLayer(input_dim = 6, output_dim = 1, activation = 'Identical')
         
         self.layers = {
             #'h0': self.h0,
             'h1': self.h1,
-            'h2': self.h2
-        }
-
-        self.parameters = {
-            'weight': {
-                #'h0': self.h0.output,
-                'h1': self.h1.weight_matrix,
-                'h2': self.h2.weight_matrix
-            }
+            'h2': self.h2,
+            'h3': self.h3
         }
 
     def forward(self, features):
@@ -43,5 +37,9 @@ class PointModel(Model):
         h_2 = self.h2(h_1)
         #print(f'h_2={h_2}')
 
-        return h_2
+        h_3 = self.h3(h_2)
+        #print(f'h_3={h_3}')
+        #print('-'*80)
+
+        return h_3
 

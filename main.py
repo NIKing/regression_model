@@ -9,7 +9,7 @@ seed = 40
 random.seed(seed)
 np.random.seed(seed)
 
-model = PointModel(lr = 3e-3)
+model = PointModel(lr = 4e-5)
 loss = SquareLoss(model)
 
 def loss_callback(predict, target):
@@ -29,8 +29,7 @@ def train(train_dataset):
             features, results = zip(*batch_data)
 
             features = np.array(features, dtype=np.float)
-            results = np.array(results, dtype=np.float)
-            
+            results = np.expand_dims(np.array(results, dtype=np.float), -1)
             #print(features, features.shape)
             #print(results, results.shape)
 
@@ -44,15 +43,19 @@ def train(train_dataset):
             loss.backward()
             
             print(f'epoch:{i}; batch_size:{batch_num}; loss:{loss.loss}; loss_error:{loss.loss_error}')
-            #print('')
+            print('')
 
             batch_data = next(iter_data)
-
+        print()
 
 def test(test_dataset):
     for i in range(len(test_dataset)):
         features, result = test_dataset[i]
-        output = model(np.array([features]))
+        features = np.array([features], dtype=np.float)
+        
+        print('Test Epoech:')
+        print(features)
+        output = model(features)
 
         print(output)
         print()
