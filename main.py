@@ -9,7 +9,9 @@ seed = 40
 random.seed(seed)
 np.random.seed(seed)
 
-model = PointModel(lr = 4e-5)
+# 比较好的参数 lr=2.3e-3; epoch=15;
+
+model = PointModel(lr=2.3e-3)
 loss = SquareLoss(model)
 
 def loss_callback(predict, target):
@@ -17,7 +19,7 @@ def loss_callback(predict, target):
 
 def train(train_dataset):
     # 迭代训练，用于查看损失函数变化
-    for i in range(2):
+    for i in range(15):
 
         train_data = DataLoader(train_dataset, shuffle=True, batch_size = 2)
         iter_data = iter(train_data)
@@ -28,7 +30,7 @@ def train(train_dataset):
          
             features, results = zip(*batch_data)
 
-            features = np.array(features, dtype=np.float)
+            features = np.array(features, dtype=np.float64)
             results = np.expand_dims(np.array(results, dtype=np.float), -1)
             #print(features, features.shape)
             #print(results, results.shape)
@@ -42,19 +44,19 @@ def train(train_dataset):
             # 反向传播-计算梯度
             loss.backward()
             
-            print(f'epoch:{i}; batch_size:{batch_num}; loss:{loss.loss}; loss_error:{loss.loss_error}')
-            print('')
+            print(f'epoch:{i}; batch_size:{batch_num}; loss:{loss.loss}; loss_error:{np.mean(loss.loss_error)}')
 
             batch_data = next(iter_data)
+            batch_num += 1
+
         print()
 
 def test(test_dataset):
     for i in range(len(test_dataset)):
         features, result = test_dataset[i]
-        features = np.array([features], dtype=np.float)
+        features = np.array([features], dtype=np.float64)
         
         print('Test Epoech:')
-        print(features)
         output = model(features)
 
         print(output)

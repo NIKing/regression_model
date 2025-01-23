@@ -13,11 +13,11 @@ class SquareLoss(Loss):
         self.batch_size = 0
 
     def __call__(self, predict, target):
-        print(f'predict:{predict.shape}')
-        print(f'predict:{predict}')
+        #print(f'predict:{predict.shape}')
+        #print(f'predict:{predict}')
 
-        print(f'target:{target.shape}')
-        print(f'target:{target}')
+        #print(f'target:{target.shape}')
+        #print(f'target:{target}')
 
         #predict = predict.reshape(-1, 1)
         #target = target.reshape(-1)

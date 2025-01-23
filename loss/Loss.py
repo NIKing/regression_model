@@ -37,7 +37,6 @@ class Loss():
                 layer_error = self.calculate_layer_error(layer, next_layer_error, next_layer_weight)
             
             #print(f'第{i}层误差', layer_error.shape)
-           
 
             # 获取上一层的输出结果, 若到了第一层，直接取输入值
             if i == 0:
