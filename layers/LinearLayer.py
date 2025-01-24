@@ -25,6 +25,7 @@ class LinearLayer():
         # 但是，输入的向量不能在初始化的时候获取到（如果在执行的时候初始化，每执行一次训练都会重置权重），因此需要固定输入特征维度
         # 在bert模型中，hidden_size = 768, [batch_size, input_dim] * [input_dim, output_dim]
         self.weight_matrix = np.array([[random.random() * 2 / self.output_dim] * self.output_dim for i in range(self.input_dim)])
+        
         #print(self.input_dim, self.output_dim, self.weight_matrix.shape)
         
         # 定义下激活函数

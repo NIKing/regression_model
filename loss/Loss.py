@@ -15,6 +15,8 @@ class Loss():
         -param next_layer_error 下一层“误差”
         -param next_layer_weight 下一层“权重”
         """
+        print('激活函数的导数', layer.delta_fn(layer.net_input))
+        print('上一层的梯度', np.dot(next_layer_error, next_layer_weight.T))
         return layer.delta_fn(layer.net_input) * np.dot(next_layer_error, next_layer_weight.T)
 
     def backward(self):
@@ -46,19 +48,19 @@ class Loss():
             
             #print(f'第{i}层输入T', current_input.T.shape)
 
-            # 计算梯度：当前层误差值 * 上一层的输出; 需要保证形状对齐; 
+            # 计算梯度：当前层误差值 * 当前层输入（上一层的输出） 
             layer_gradient = np.dot(current_input.T, layer_error)
             layer_gradient /= self.batch_size 
 
             current_weight = np.array(layer.weight_matrix)
-            #print(f'第{i}层的梯度:', layer_gradient.shape)
-            #print(f'第{i}层的权重:', current_weight.shape)
+            print(f'第{i}层的梯度:', layer_gradient)
+            #print(f'第{i}层的权重:', current_weight)
 
             # 更新参数
             new_weight = current_weight - self.model.learning_rate * layer_gradient
 
             # 恢复权重形状，保存到网络层
-            #print(f'第{i}层的新权重', new_weight.shape)
+            #print(f'第{i}层的新权重:', new_weight)
             self.model.update_parameters(layer_number, new_weight)
             
             # 记录当前信息，用于误差传播

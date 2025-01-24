@@ -3,7 +3,7 @@ import numpy as np
 class Functional(): 
     @staticmethod
     def ReLU(net_input):
-        """RuLU激活函数，值域为max(0, z)"""
+        """ReLU激活函数，值域为max(0, z)"""
         return np.maximum(net_input, 0)
     
     @staticmethod
