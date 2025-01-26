@@ -14,7 +14,7 @@ np.random.seed(seed)
 
 # 梯度消失的几组参数 （lr=1.6e-2,epoch=3）
 
-model = PointModel(lr=1.6e-2)
+model = PointModel(lr=1.2e-2)
 loss = SquareLoss(model)
 
 def loss_callback(predict, target):

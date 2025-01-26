@@ -42,9 +42,11 @@ class LinearLayer():
         #print('&'*30)
         #print(features.shape)
         #print(self.weight_matrix.shape)
+        print('输入:', features)
         self.input = features
         self.net_input = self.affine_fn(features)
         self.output = self.activation_fn(self.net_input)
+        print('净输入:', self.net_input)
         #print(self.activation)
         #print(self.output.shape)
         #print('--'*30 )

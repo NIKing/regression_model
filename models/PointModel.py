@@ -25,21 +25,22 @@ class PointModel(Model):
         
         # 第0 层 输入层，没有神经元
         #h_0 = self.h0(features)
-
+        
         self.in_features = features
+        print('='*20, 'forward Start', '='*20)
 
         # 第一层
         h_1 = self.h1(features)
-        #print(f'h_1={h_1}')
+        print(f'h_1={h_1}')
         
         # 第二层
-        # [6, 1] 表示有6个维度的预测值 
         h_2 = self.h2(h_1)
-        #print(f'h_2={h_2}')
+        print(f'h_2={h_2}')
 
         h_3 = self.h3(h_2)
-        #print(f'h_3={h_3}')
-        #print('-'*80)
+        print(f'h_3={h_3}')
+    
+        print('='*20, 'forward End', '='*20)
 
         return h_3
 

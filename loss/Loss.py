@@ -38,7 +38,7 @@ class Loss():
                 # 从下一层网络中，计算出误差
                 layer_error = self.calculate_layer_error(layer, next_layer_error, next_layer_weight)
             
-            #print(f'第{i}层误差', layer_error.shape)
+            print(f'第{i}层误差', layer_error)
 
             # 获取上一层的输出结果, 若到了第一层，直接取输入值
             if i == 0:
@@ -46,21 +46,22 @@ class Loss():
             else:
                 current_input = layer.input
             
-            #print(f'第{i}层输入T', current_input.T.shape)
+            print(f'第{i}层输入T', current_input.T)
 
             # 计算梯度：当前层误差值 * 当前层输入（上一层的输出） 
             layer_gradient = np.dot(current_input.T, layer_error)
             layer_gradient /= self.batch_size 
 
             current_weight = np.array(layer.weight_matrix)
+            print(f'第{i}层的权重:', current_weight)
             print(f'第{i}层的梯度:', layer_gradient)
-            #print(f'第{i}层的权重:', current_weight)
+            #print(f'第{i}层学习率后的梯度:', self.model.learning_rate * layer_gradient)
 
             # 更新参数
             new_weight = current_weight - self.model.learning_rate * layer_gradient
 
             # 恢复权重形状，保存到网络层
-            #print(f'第{i}层的新权重:', new_weight)
+            print(f'第{i}层的新权重:', new_weight)
             self.model.update_parameters(layer_number, new_weight)
             
             # 记录当前信息，用于误差传播
