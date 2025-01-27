@@ -4,6 +4,7 @@ import numpy as np
 from models import PointModel
 from loss import SquareLoss
 from dataloader import DataLoader
+from optim import LBFGS
 
 seed = 40
 random.seed(seed)
@@ -14,8 +15,9 @@ np.random.seed(seed)
 
 # 梯度消失的几组参数 （lr=1.6e-2,epoch=3）
 
-model = PointModel(lr=1.5e-2)
+model = PointModel()
 loss = SquareLoss(model)
+optim = LBFGS(model.params, lr=1.5e-2)
 
 def loss_callback(predict, target):
     return loss(predict, target)
