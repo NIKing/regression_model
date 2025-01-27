@@ -14,7 +14,7 @@ np.random.seed(seed)
 
 # 梯度消失的几组参数 （lr=1.6e-2,epoch=3）
 
-model = PointModel(lr=1.2e-2)
+model = PointModel(lr=1.5e-2)
 loss = SquareLoss(model)
 
 def loss_callback(predict, target):
@@ -22,7 +22,7 @@ def loss_callback(predict, target):
 
 def train(train_dataset):
     # 迭代训练，用于查看损失函数变化
-    for i in range(3):
+    for i in range(13):
 
         train_data = DataLoader(train_dataset, shuffle=True, batch_size = 2)
         iter_data = iter(train_data)
