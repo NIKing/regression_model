@@ -61,7 +61,7 @@ class LinearLayer():
 
             # 仿射变换
             self.net_input = self.affine_fn_by_normal(self.net_input)
-            print('仿射变换净输入:', self.net_input)
+            #print('仿射变换净输入:', self.net_input)
 
         self.output = self.activation_fn(self.net_input)
         #print(self.activation)
@@ -77,20 +77,23 @@ class LinearLayer():
 
     def standardization(self, z):
         """
-        归一化净输入的值
+        层归一化净输入的值
         -param z tensors 净输入
         return tensors
         """
-        
-        mean_value = np.mean(z) # 均值
-        std_value = np.std(z)   # 标准差
+
+        # 注意，这里是层归一化处理方法，因此需要对每个样本进行求值，而非 np.mean(z)，当作是mini-batch的样本
+        mean_value = np.mean(z, axis=1, keepdims=True) # 均值
+        std_value = np.std(z, axis=1, keepdims=True)   # 标准差
+        #print('mean_value', mean_value)
+        #print('std_value', std_value)
 
         return (z - mean_value) / (std_value + 1e-6)
 
 
     def affine_fn_by_normal(self, z):
         """
-        归一化后的仿射变换
+        层归一化后的仿射变换
         -param z tensor 净输入
         return tensors
         """
