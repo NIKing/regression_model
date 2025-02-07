@@ -5,7 +5,7 @@ import numpy as np
 from functional import Functional
 
 class LinearLayer():
-    def __init__(self, input_dim = 6, output_dim= 6, activation = 'ReLU'):
+    def __init__(self, input_dim = 6, output_dim= 6, activation = 'ReLU', is_normal = True):
 
         # 定义神经元为6; 
         self.output_dim = output_dim
@@ -28,6 +28,11 @@ class LinearLayer():
         
         #print(self.input_dim, self.output_dim, self.weight_matrix.shape)
         
+        # 归一化的参数
+        self.is_normal = is_normal
+        self.gamma = np.array([1.0] * self.output_dim)  # 缩放因子    
+        self.beta = np.array([0.0] * self.output_dim)   # 偏移因子
+        
         # 定义下激活函数
         self.activation = activation
         self.activation_fn = Functional.Identical
@@ -44,15 +49,50 @@ class LinearLayer():
         #print(self.weight_matrix.shape)
         #print('输入:', features)
         self.input = features
+
+        # 仿射变换
         self.net_input = self.affine_fn(features)
+        print('净输入:', self.net_input)
+        
+        if self.is_normal:
+            # 归一化
+            self.net_input = self.standardization(self.net_input)
+            print('归一化净输入:', self.net_input)
+
+            # 仿射变换
+            self.net_input = self.affine_fn_by_normal(self.net_input)
+            print('仿射变换净输入:', self.net_input)
+
         self.output = self.activation_fn(self.net_input)
-        #print('净输入:', self.net_input)
         #print(self.activation)
         #print(self.output.shape)
-        #print('--'*30 )
+        print('--'*30 )
 
         return self.output
     
     def affine_fn(self, features):
         """仿射函数（当偏置等于 0 时，仿射函数就是线性函数 y = w*x ）"""
         return np.dot(features, self.weight_matrix)
+
+
+    def standardization(self, z):
+        """
+        归一化净输入的值
+        -param z tensors 净输入
+        return tensors
+        """
+        
+        mean_value = np.mean(z) # 均值
+        std_value = np.std(z)   # 标准差
+
+        return (z - mean_value) / (std_value + 1e-6)
+
+
+    def affine_fn_by_normal(self, z):
+        """
+        归一化后的仿射变换
+        -param z tensor 净输入
+        return tensors
+        """
+        return self.gamma * z + self.beta
+

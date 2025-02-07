@@ -15,6 +15,7 @@ class Loss():
         -param next_layer_error 下一层“误差”
         -param next_layer_weight 下一层“权重”
         """
+        #print('当前层的净输入', layer.net_input)
         #print('激活函数的导数', layer.delta_fn(layer.net_input))
         #print('上一层的梯度', np.dot(next_layer_error, next_layer_weight.T))
         return layer.delta_fn(layer.net_input) * np.dot(next_layer_error, next_layer_weight.T)

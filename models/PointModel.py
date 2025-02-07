@@ -12,7 +12,7 @@ class PointModel(Model):
         #self.h0 = InputLayer(input_dim = 1, output_dim = 6)
         self.h1 = LinearLayer(input_dim = 1, output_dim = 6)
         self.h2 = LinearLayer(input_dim = 6, output_dim = 6)
-        self.h3 = LinearLayer(input_dim = 6, output_dim = 1, activation = 'Identical')
+        self.h3 = LinearLayer(input_dim = 6, output_dim = 1, activation = 'Identical', is_normal = False)
         
         self.layers = {
             #'h0': self.h0,

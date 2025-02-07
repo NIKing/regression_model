@@ -4,7 +4,7 @@ import numpy as np
 from models import PointModel
 from loss import SquareLoss
 from dataloader import DataLoader
-from optim import LBFGS
+#from optim import LBFGS
 
 seed = 40
 random.seed(seed)
@@ -15,18 +15,21 @@ np.random.seed(seed)
 
 # 梯度消失的几组参数 （lr=1.6e-2,epoch=3）
 
-model = PointModel()
+model = PointModel(1.2e-2)
 loss = SquareLoss(model)
-optim = LBFGS(model.params, lr=1.5e-2)
+#optim = LBFGS(model.params, lr=1.5e-2)
 
 def loss_callback(predict, target):
     return loss(predict, target)
 
 def train(train_dataset):
-    # 迭代训练，用于查看损失函数变化
-    for i in range(13):
 
-        train_data = DataLoader(train_dataset, shuffle=True, batch_size = 2)
+    # 迭代训练，用于查看损失函数变化
+    for i in range(3):
+        
+        model.train()
+
+        train_data = DataLoader(train_dataset, shuffle=False, batch_size = 2)
         iter_data = iter(train_data)
         batch_data = next(iter_data)
 
@@ -58,6 +61,8 @@ def train(train_dataset):
         print('*'*80)
 
 def test(test_dataset):
+    model.eval()
+
     for i in range(len(test_dataset)):
         features, result = test_dataset[i]
         features = np.array([features], dtype=np.float64)
