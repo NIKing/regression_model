@@ -9,8 +9,7 @@ class Loss():
 
     def calculate_layer_error(self, layer, next_layer_error, next_layer_weight):
         """
-        每一层的误差，是由损失函数对净输入的梯度计算
-        不过，根据链式规则，当前层的“误差”是由下一层的“误差”和“权重”，再经过对当前层激活函数进行求导，得到的梯度
+        一般网络层的误差，是由下一层的“误差”和“权重”点积结果，与当前层激活函数对净输入的导数的逐元素积，得到的梯度
         -param layer 当前网络层
         -param next_layer_error 下一层“误差”
         -param next_layer_weight 下一层“权重”
@@ -32,11 +31,12 @@ class Loss():
         for i in range(len(layer_items) - 1, -1, -1):
             layer_number, layer = layer_items[i]
             
-            # 首先计算【输出层】的误差, 这个在外部已经计算过，直接拿过来用
+            # 计算误差，这里误差指的既不是【上一层误差】也不是【当前层误差】，而是上一层与当前层连接的【变化率】
             if i == len(layer_items) - 1:
+                # 计算【输出层】误差
                 layer_error = self.loss_error
             else:
-                # 从下一层网络中，计算出误差
+                # 计算【一般网络层】误差
                 layer_error = self.calculate_layer_error(layer, next_layer_error, next_layer_weight)
             
             #print(f'第{i}层误差', layer_error)
@@ -49,9 +49,8 @@ class Loss():
             
             #print(f'第{i}层输入T', current_input.T)
 
-            # 计算梯度：当前层误差值 * 当前层输入（上一层的输出） 
-            layer_gradient = np.dot(current_input.T, layer_error)
-            layer_gradient /= self.batch_size 
+            # 计算当前层权重参数梯度：连接误差值 * 当前层输入（上一层的输出）, 由链式法则推导得出
+            layer_gradient = np.dot(current_input.T, layer_error) / self.batch_size
 
             current_weight = np.array(layer.weight_matrix)
             #print(f'第{i}层的权重:', current_weight)
@@ -64,6 +63,19 @@ class Loss():
             # 恢复权重形状，保存到网络层
             #print(f'第{i}层的新权重:', new_weight)
             self.model.update_parameters(layer_number, new_weight)
+            
+            # 计算当前层归一化缩放因子参数与平移参数
+            print(layer.net_input_normal.shape, layer_error.shape)
+            layer_gamma_gradient = (layer.net_input_normal * layer_error) / self.batch_size
+            new_gamma = layer.gamma - self.model.learning_rate * layer_gamma_gradient
+            
+            print('gamma', layer.gamma.shape, new_gamma.shape)
+            print(layer.gamma)
+            print(new_gamma)
+            print()
+
+            self.model.update_gamma(layer_number, new_gamma)
+            #self.model.update_beta(layer_number
             
             # 记录当前信息，用于误差传播
             next_layer_error = layer_error

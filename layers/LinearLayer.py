@@ -14,8 +14,10 @@ class LinearLayer():
         self.input_dim = input_dim
         
         self.input = None
-        self.net_input = None
         self.output = None
+        
+        self.net_input = None
+        self.net_input_normal = None
 
         # 根据输入向量的数量(N)，初始化神经元矩阵(N * 6)，并进行 He 初始化
         # He初始化，对ReLU激活函数等正向激活情况做优化，使用N(0, 2/n)的分布, N 表示正太分布的意思；n 表示神经元数量
@@ -25,7 +27,6 @@ class LinearLayer():
         # 但是，输入的向量不能在初始化的时候获取到（如果在执行的时候初始化，每执行一次训练都会重置权重），因此需要固定输入特征维度
         # 在bert模型中，hidden_size = 768, [batch_size, input_dim] * [input_dim, output_dim]
         self.weight_matrix = np.array([[random.random() * 2 / self.output_dim] * self.output_dim for i in range(self.input_dim)])
-        
         #print(self.input_dim, self.output_dim, self.weight_matrix.shape)
         
         # 归一化的参数
@@ -52,20 +53,20 @@ class LinearLayer():
 
         # 仿射变换
         self.net_input = self.affine_fn(features)
+        self.net_input_normal = self.net_input      # 虽然输出层没有归一化，但是为了反向传播计算，需要赋值
         print('净输入:', self.net_input)
         
         if self.is_normal:
             # 归一化
-            self.net_input = self.standardization(self.net_input)
-            print('归一化净输入:', self.net_input)
+            self.net_input_normal = self.standardization(self.net_input)
+            print('归一化净输入:', self.net_input_normal)
 
             # 仿射变换
-            self.net_input = self.affine_fn_by_normal(self.net_input)
-            #print('仿射变换净输入:', self.net_input)
+            self.net_input = self.affine_fn_by_normal(self.net_input_normal)
+            print('仿射变换净输入:', self.net_input)
 
         self.output = self.activation_fn(self.net_input)
-        #print(self.activation)
-        #print(self.output.shape)
+        #print(self.output)
         print('--'*30 )
 
         return self.output

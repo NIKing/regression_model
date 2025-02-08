@@ -22,12 +22,8 @@ class Model():
 
     def update_parameters(self, layer_num, weights):
         """更新权重参数"""
-        
-        #print('----')
-        #print(self.layers[layer_num].weight_matrix.shape)
-        #print(layer_num, weights.shape)
-        #output_dim, input_dim = self.layers[layer_num].output_dim, self.layers[layer_num].input_dim
-        #print(weights.view(output_dim, input_dim))
-        #print('+++++')
-
         self.layers[layer_num].weight_matrix = weights
+
+    def update_gamma(self, layer_num, gamma):
+        """更新缩放因子"""
+        self.layers[layer_num].gamma = gamma
