@@ -48,26 +48,36 @@ class LinearLayer():
         #print('&'*30)
         #print(features.shape)
         #print(self.weight_matrix.shape)
-        #print('输入:', features)
         self.input = features
+
+        print('输入:', features)
+        print('样本均值分布:', np.mean(features, axis=1))
+        print('样本方差分布:', np.var(features, axis=1))
 
         # 仿射变换
         self.net_input = self.affine_fn(features)
-        self.net_input_normal = self.net_input      # 虽然输出层没有归一化，但是为了反向传播计算，需要赋值
         print('净输入:', self.net_input)
         
         if self.is_normal:
             # 归一化
             self.net_input_normal = self.standardization(self.net_input)
             print('归一化净输入:', self.net_input_normal)
+            #print(np.mean(self.net_input_normal, axis=1))
+            #print(np.var(self.net_input_normal, axis=1))
 
-            # 仿射变换
+            # 二次仿射变换
             self.net_input = self.affine_fn_by_normal(self.net_input_normal)
-            print('仿射变换净输入:', self.net_input)
+            print('二次仿射变换:', self.net_input)
+
+        else:
+            # 虽然输出层没有归一化，但是为了反向传播计算，需要赋值
+            self.net_input_normal = self.net_input      
 
         self.output = self.activation_fn(self.net_input)
         #print(self.output)
-        print('--'*30 )
+        #print('gamma=', self.gamma)
+        #print('beta=', self.beta)
+        print('')
 
         return self.output
     
@@ -75,21 +85,19 @@ class LinearLayer():
         """仿射函数（当偏置等于 0 时，仿射函数就是线性函数 y = w*x ）"""
         return np.dot(features, self.weight_matrix)
 
-
     def standardization(self, z):
         """
         层归一化净输入的值
         -param z tensors 净输入
         return tensors
         """
-
         # 注意，这里是层归一化处理方法，因此需要对每个样本进行求值，而非 np.mean(z)，当作是mini-batch的样本
         mean_value = np.mean(z, axis=1, keepdims=True) # 均值
         std_value = np.std(z, axis=1, keepdims=True)   # 标准差
         #print('mean_value', mean_value)
         #print('std_value', std_value)
 
-        return (z - mean_value) / (std_value + 1e-6)
+        return (z - mean_value) / (std_value + 1e-5)
 
 
     def affine_fn_by_normal(self, z):

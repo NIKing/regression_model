@@ -64,18 +64,17 @@ class Loss():
             #print(f'第{i}层的新权重:', new_weight)
             self.model.update_parameters(layer_number, new_weight)
             
-            # 计算当前层归一化缩放因子参数与平移参数
-            print(layer.net_input_normal.shape, layer_error.shape)
-            layer_gamma_gradient = (layer.net_input_normal * layer_error) / self.batch_size
+            # 计算当前层归一化缩放因子参数, 注意需要按照特征维度，合并多个样本的值
+            layer_gamma_gradient = np.sum(layer.net_input_normal * layer_error, axis=0) / self.batch_size
             new_gamma = layer.gamma - self.model.learning_rate * layer_gamma_gradient
             
-            print('gamma', layer.gamma.shape, new_gamma.shape)
-            print(layer.gamma)
-            print(new_gamma)
-            print()
-
             self.model.update_gamma(layer_number, new_gamma)
-            #self.model.update_beta(layer_number
+            
+            # 计算当前层平移参数
+            layer_beta_gradient = np.sum(layer_error, axis=0) / self.batch_size
+            new_beta = layer.beta - self.model.learning_rate * layer_beta_gradient
+
+            self.model.update_beta(layer_number, new_beta)
             
             # 记录当前信息，用于误差传播
             next_layer_error = layer_error

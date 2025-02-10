@@ -15,7 +15,7 @@ np.random.seed(seed)
 
 # 梯度消失的几组参数 （lr=1.6e-2,epoch=3）
 
-model = PointModel(1.2e-2)
+model = PointModel(5e-3)
 loss = SquareLoss(model)
 #optim = LBFGS(model.params, lr=1.5e-2)
 
@@ -25,11 +25,13 @@ def loss_callback(predict, target):
 def train(train_dataset):
 
     # 迭代训练，用于查看损失函数变化
-    for i in range(3):
+    for i in range(5):
         
+        print('*'*40, f'第{i+1}轮次训练', '*'*40)
+
         model.train()
 
-        train_data = DataLoader(train_dataset, shuffle=False, batch_size = 2)
+        train_data = DataLoader(train_dataset, shuffle=True, batch_size = 2)
         iter_data = iter(train_data)
         batch_data = next(iter_data)
 
@@ -52,13 +54,12 @@ def train(train_dataset):
             # 反向传播-计算梯度
             loss.backward()
             
-            print(f'epoch:{i}; batch_size:{batch_num}; loss:{loss.loss}; loss_error:{np.mean(loss.loss_error)}')
+            print(f'epoch:{i + 1}; batch_size:{batch_num}; loss:{loss.loss}; loss_error:{np.mean(loss.loss_error)}')
             print('')
 
             batch_data = next(iter_data)
             batch_num += 1
 
-        print('*'*80)
 
 def test(test_dataset):
     model.eval()
