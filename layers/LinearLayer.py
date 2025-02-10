@@ -62,12 +62,16 @@ class LinearLayer():
             # 归一化
             self.net_input_normal = self.standardization(self.net_input)
             print('归一化净输入:', self.net_input_normal)
+
+            #self.net_input_normal = self.rescaling(self.net_input)
+            #print('归一化净输入:', self.net_input_normal)
+            
             #print(np.mean(self.net_input_normal, axis=1))
             #print(np.var(self.net_input_normal, axis=1))
 
             # 二次仿射变换
             self.net_input = self.affine_fn_by_normal(self.net_input_normal)
-            print('二次仿射变换:', self.net_input)
+            #print('二次仿射变换:', self.net_input)
 
         else:
             # 虽然输出层没有归一化，但是为了反向传播计算，需要赋值
@@ -87,17 +91,28 @@ class LinearLayer():
 
     def standardization(self, z):
         """
-        层归一化净输入的值
+        标准归一化净输入的值
         -param z tensors 净输入
         return tensors
         """
         # 注意，这里是层归一化处理方法，因此需要对每个样本进行求值，而非 np.mean(z)，当作是mini-batch的样本
         mean_value = np.mean(z, axis=1, keepdims=True) # 均值
         std_value = np.std(z, axis=1, keepdims=True)   # 标准差
-        #print('mean_value', mean_value)
-        #print('std_value', std_value)
+        print('mean_value', mean_value)
+        print('std_value', std_value)
+        print('std_value2', std_value + 1e-5)
 
         return (z - mean_value) / (std_value + 1e-5)
+
+    def rescaling(self, z):
+        """最小-最大缩放归一化"""
+        min_value = np.min(z, axis=1, keepdims=True)
+        max_value = np.max(z, axis=1, keepdims=True)
+        
+        print('min_value', min_value)
+        print('max_value', max_value)
+        
+        return (z - min_value) / (max_value - min_value + 1e-5)
 
 
     def affine_fn_by_normal(self, z):
