@@ -22,7 +22,7 @@ class SquareLoss(Loss):
         #predict = predict.reshape(-1, 1)
         #target = target.reshape(-1)
         
-        self.batch_size = list(predict.shape)[0]
+        self.batch_size = predict.shape[0]
         
         # 0.5 这个系数，本身就是罚项，有助于损失值不上溢，但，不是必须的
         self.loss = np.mean(0.5 * (predict - target) ** 2)
