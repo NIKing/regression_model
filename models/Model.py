@@ -26,8 +26,10 @@ class Model():
 
     def update_gamma(self, layer_num, gamma):
         """更新缩放因子"""
+        #print('gamma', layer_num, gamma)
         self.layers[layer_num].gamma = gamma
 
     def update_beta(self, layer_num, beta):
         """更新平移参数"""
+        #print('beta', layer_num, beta)
         self.layers[layer_num].beta = beta

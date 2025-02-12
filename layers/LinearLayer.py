@@ -7,10 +7,10 @@ from functional import Functional
 class LinearLayer():
     def __init__(self, input_dim = 6, output_dim= 6, activation = 'ReLU', is_normal = True):
 
-        # 定义神经元为6; 
+        # 神经元（输出维度）; 
         self.output_dim = output_dim
 
-        # 输入参数为1;
+        # 特征数量（输入维度）;
         self.input_dim = input_dim
         
         self.input = None
@@ -46,11 +46,10 @@ class LinearLayer():
     def __call__(self, features):
         """这是代表神经元函数，每个输入都需要与权重参数发生线性变换，再经过非线性变换，最后输出"""
         #print('&'*30)
-        #print(features.shape)
-        #print(self.weight_matrix.shape)
         self.input = features
 
         print('输入:', features)
+        #print('权重：', self.weight_matrix)
         print('样本均值分布:', np.mean(features, axis=1))
         print('样本方差分布:', np.var(features, axis=1))
 
@@ -71,7 +70,7 @@ class LinearLayer():
 
             # 二次仿射变换
             self.net_input = self.affine_fn_by_normal(self.net_input_normal)
-            #print('二次仿射变换:', self.net_input)
+            print('二次仿射变换:', self.net_input)
 
         else:
             # 虽然输出层没有归一化，但是为了反向传播计算，需要赋值
@@ -98,9 +97,9 @@ class LinearLayer():
         # 注意，这里是层归一化处理方法，因此需要对每个样本进行求值，而非 np.mean(z)，当作是mini-batch的样本
         mean_value = np.mean(z, axis=1, keepdims=True) # 均值
         std_value = np.std(z, axis=1, keepdims=True)   # 标准差
-        print('mean_value', mean_value)
-        print('std_value', std_value)
-        print('std_value2', std_value + 1e-5)
+
+        #print('mean_value', mean_value)
+        #print('std_value', std_value)
 
         return (z - mean_value) / (std_value + 1e-5)
 
@@ -109,8 +108,8 @@ class LinearLayer():
         min_value = np.min(z, axis=1, keepdims=True)
         max_value = np.max(z, axis=1, keepdims=True)
         
-        print('min_value', min_value)
-        print('max_value', max_value)
+        #print('min_value', min_value)
+        #print('max_value', max_value)
         
         return (z - min_value) / (max_value - min_value + 1e-5)
 

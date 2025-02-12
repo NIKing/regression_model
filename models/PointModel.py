@@ -10,7 +10,7 @@ class PointModel(Model):
         
         # 若无必要，勿增实体。第0层没有神经元，就不要申明网络层次，让模型去学习他
         #self.h0 = InputLayer(input_dim = 1, output_dim = 6)
-        self.h1 = LinearLayer(input_dim = 1, output_dim = 6, is_normal = True)
+        self.h1 = LinearLayer(input_dim = 2, output_dim = 6, is_normal = True)
         self.h2 = LinearLayer(input_dim = 6, output_dim = 6, is_normal = True)
         self.h3 = LinearLayer(input_dim = 6, output_dim = 1, activation = 'Identical', is_normal = False)
         

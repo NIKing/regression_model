@@ -10,12 +10,9 @@ seed = 40
 random.seed(seed)
 np.random.seed(seed)
 
-# 比较好的几组参数 （lr=2.3e-3,epoch=15）（lr=5e-3,epoch=5）（lr=1e-2,epoch=5）
-# 还可以的几组参数 （lr=1.2e-2,epoch=3）(lr=1e-2,epoch=3)
+# 效果最好的参数 [8e-3, 55],
 
-# 梯度消失的几组参数 （lr=1.6e-2,epoch=3）
-
-model = PointModel(1.2e-4)
+model = PointModel(8e-5)
 loss = SquareLoss(model)
 #optim = LBFGS(model.params, lr=1.5e-2)
 
@@ -25,13 +22,13 @@ def loss_callback(predict, target):
 def train(train_dataset):
 
     # 迭代训练，用于查看损失函数变化
-    for i in range(3):
+    for i in range(5):
         
         print('*'*40, f'第{i+1}轮次训练', '*'*40)
 
         model.train()
 
-        train_data = DataLoader(train_dataset, shuffle=True, batch_size = 2)
+        train_data = DataLoader(train_dataset, shuffle=True, batch_size=2)
         iter_data = iter(train_data)
         batch_data = next(iter_data)
 
@@ -82,12 +79,12 @@ if __name__ == '__main__':
     # 若在数据集中加入 [[0.0], 0.0] 和 [[-1.0], -2.0] 都没有什么特殊的作用
 
     train_dataset = [
-        [[2.0], 4.0], [[1.0], 2.0], [[3.0], 6.0], [[0.5], 1.0], [[1.25], 2.5],
-        [[5.0], 10.0], [[1.5], 3.0], [[2.5], 5.0], [[4.0], 8.0], [[3.5], 7.0],
+        [[2.0, 1.2], 6.4], [[1.0, 1.0], 4.0], [[3.0, 1.5], 9.0], [[0.5, 0.5], 2.0], [[1.25, 1.0], 4.5],
+        [[5.0, 4.0], 18.0], [[1.5, 0.01], 3.02], [[2.5, 0.0], 5.0], [[4.0, 0.1], 8.2], [[3.5, 3], 13.0],
     ]
 
     test_dataset = [
-        [[1.25], 2.5], [[2.0], 4.0], [[4.0], 8.0]
+        [[1.25, 0], 2.5], [[2.0, 2.0], 8.0], [[4.0, 1.0], 10.0]
     ]
     
 
