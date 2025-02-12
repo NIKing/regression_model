@@ -12,7 +12,7 @@ np.random.seed(seed)
 
 # 效果最好的参数 [8e-3, 55],
 
-model = PointModel(8e-3)
+model = PointModel(1e-4)
 loss = SquareLoss(model)
 #optim = LBFGS(model.params, lr=1.5e-2)
 

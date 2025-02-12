@@ -64,15 +64,14 @@ class LinearLayer():
 
         if self.is_normal:
             # 归一化
-            self.net_input_normal = self.standardization(self.net_input)
-            print('归一化净输入:', self.net_input_normal)
-
-            #self.net_input_normal = self.rescaling(self.net_input)
+            #self.net_input_normal = self.standardization(self.net_input)
             #print('归一化净输入:', self.net_input_normal)
-            
-            print('归一化均值', np.mean(self.net_input_normal, axis=1))
-            print('归一化标准差', np.var(self.net_input_normal, axis=1))
-            print()
+            #print('归一化均值', np.mean(self.net_input_normal, axis=1))
+            #print('归一化标准差', np.var(self.net_input_normal, axis=1))
+            #print()
+
+            self.net_input_normal = self.rescaling(self.net_input)
+            print('归一化净输入:', self.net_input_normal)
 
             # 二次仿射变换
             self.net_input = self.affine_fn_by_normal(self.net_input_normal)
