@@ -26,14 +26,13 @@ class LinearLayer():
         # 虽然，理论上权重矩阵的应该由【输入向量数（输入特征维度）* 神经元数量】组成
         # 但是，输入的向量不能在初始化的时候获取到（如果在执行的时候初始化，每执行一次训练都会重置权重），因此需要固定输入特征维度
         # 在bert模型中，hidden_size = 768, [batch_size, input_dim] * [input_dim, output_dim]
-        #self.weight_matrix = np.array([[random.random() * 2 / self.output_dim] * self.output_dim for i in range(self.input_dim)])
         self.weight_matrix = np.random.randn(input_dim, output_dim) * np.sqrt(2. / input_dim)
         #print(self.input_dim, self.output_dim, self.weight_matrix.shape)
         
         # 归一化的参数
         self.is_normal = is_normal
-        self.gamma = np.array([1.0] * self.output_dim)  # 缩放因子    
-        self.beta = np.array([0.0] * self.output_dim)   # 偏移因子
+        self.gamma = np.ones(self.output_dim)  # 缩放因子    
+        self.beta = np.zeros(self.output_dim)  # 偏移因子
         
         # 定义下激活函数
         self.activation = activation
@@ -41,7 +40,7 @@ class LinearLayer():
         self.delta_fn = None
 
         if activation == 'ReLU':
-            self.activation_fn = Functional.ReLU
+            self.activation_fn = Functional.Leaky_relu
             self.delta_fn = Functional.ReLU_delta
 
     def __call__(self, features):
@@ -49,44 +48,43 @@ class LinearLayer():
         #print('&'*30)
         self.input = features
 
-        print('输入:', features)
-        print('权重：', self.weight_matrix)
-        print('样本均值分布:', np.mean(features, axis=1))
-        print('样本方差分布:', np.var(features, axis=1))
-        print()
+        #print('输入:', features)
+        #print('权重：', self.weight_matrix)
+        #print('样本均值分布:', np.mean(features, axis=1))
+        #print('样本方差分布:', np.var(features, axis=1))
+        #print()
 
         # 仿射变换
         self.net_input = self.affine_fn(features)
-        print('净输入:', self.net_input)
-        print('净输入均值', np.mean(self.net_input, axis=1))
-        print('净输入标准差', np.std(self.net_input, axis=1))
-        print()
+        #print('净输入:', self.net_input)
+        #print('净输入均值', np.mean(self.net_input, axis=1))
+        #print('净输入标准差', np.std(self.net_input, axis=1))
+        #print()
 
         if self.is_normal:
             # 归一化
-            #self.net_input_normal = self.standardization(self.net_input)
+            self.net_input_normal = self.standardization(self.net_input)
             #print('归一化净输入:', self.net_input_normal)
             #print('归一化均值', np.mean(self.net_input_normal, axis=1))
             #print('归一化标准差', np.var(self.net_input_normal, axis=1))
             #print()
 
-            self.net_input_normal = self.rescaling(self.net_input)
-            print('归一化净输入:', self.net_input_normal)
+            #self.net_input_normal = self.rescaling(self.net_input)
+            #print('归一化净输入:', self.net_input_normal)
 
             # 二次仿射变换
             self.net_input = self.affine_fn_by_normal(self.net_input_normal)
-            print('二次仿射变换:', self.net_input)
+            #print('二次仿射变换:', self.net_input)
 
         else:
             # 虽然输出层没有归一化，但是为了反向传播计算，需要赋值
             self.net_input_normal = self.net_input      
 
         self.output = self.activation_fn(self.net_input)
-        #print(self.output)
         #print('gamma=', self.gamma)
         #print('beta=', self.beta)
-        print('-'*80)
-        print()
+        #print('-'*80)
+        #print()
 
         return self.output
     
@@ -104,8 +102,8 @@ class LinearLayer():
         mean_value = np.mean(z, axis=1, keepdims=True) # 均值
         std_value = np.std(z, axis=1, keepdims=True)   # 标准差
 
-        print('mean_value', mean_value)
-        print('std_value', std_value)
+        #print('mean_value', mean_value)
+        #print('std_value', std_value)
 
         return (z - mean_value) / (std_value + 1e-5)
 

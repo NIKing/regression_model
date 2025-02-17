@@ -27,6 +27,7 @@ class PointModel(Model):
         #h_0 = self.h0(features)
         
         self.in_features = features
+
         #print('='*20, 'forward Start', '='*20)
 
         # 第一层

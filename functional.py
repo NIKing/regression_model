@@ -7,6 +7,11 @@ class Functional():
         return np.maximum(net_input, 0)
     
     @staticmethod
+    def Leaky_relu(x, alpha=0.01):
+        """Leaky-Relu激活函数"""
+        return np.where(x > 0, x, x * alpha)
+    
+    @staticmethod
     def ReLU_delta(_input):
         """ReLU导函数"""
         return np.where(_input, 1, 0)

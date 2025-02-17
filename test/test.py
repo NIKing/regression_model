@@ -30,13 +30,32 @@ def matrix_calcu():
     b = np.array([[3, 3, 3],[4, 4, 4]])
     b_T = b.T
 
-    print(a.shape)
-    print(b_T.shape)
-    
     print(a)
+    print(a.shape)
+    print()
+
     print(b_T)
+    print(b_T.shape)
+    print()
+    
+    # 矩阵的乘法
     d = np.dot(a, b_T)
     print(d)
+    print(d.shape)
+    print()
+    
+    # 矩阵的点积（逐元素积）
+    a_b = a * b
+    print(a_b)
+
+    e = np.array([[5, 6], [7, 7]])
+    print(e)
+    print(e.shape)
+    
+    # 不能执行下面的操作
+    #a_e = a * e
+    #print(a_e)
+
 
 
 matrix_calcu()

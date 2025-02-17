@@ -11,8 +11,9 @@ random.seed(seed)
 np.random.seed(seed)
 
 # 效果最好的参数 [8e-3, 55],
+# [6e-3, 5]
 
-model = PointModel(1e-4)
+model = PointModel(6e-3)
 loss = SquareLoss(model)
 #optim = LBFGS(model.params, lr=1.5e-2)
 
@@ -65,9 +66,8 @@ def test(test_dataset):
         features, result = test_dataset[i]
         features = np.array([features], dtype=np.float64)
         
-        print('Test Epoech:')
+        print(f'Test Epoech:{i}/{len(test_dataset)}')
         output = model(features)
-
         print(output)
         print()
 
@@ -91,8 +91,8 @@ if __name__ == '__main__':
     # 添加一些干扰
     #train_dataset = [[[s * 1e-6 for s in samples], target] for samples, target in train_dataset]
 
-    check_result = [2 * sum(sample) == target for sample, target in train_dataset]
-    print(check_result)
+    #check_result = [2 * sum(sample) == target for sample, target in train_dataset]
+    #print(check_result)
 
     test_dataset = [
         [[1.25, 0], 2.5], [[2.0, 2.0], 8.0], [[4.0, 1.0], 10.0]
