@@ -52,7 +52,7 @@ def train(train_dataset):
             # 反向传播-计算梯度
             loss.backward()
             
-            print(f'epoch:{i + 1}; batch_size:{batch_num}; loss:{loss.loss}; loss_error:{np.mean(loss.loss_error)}')
+            print(f'epoch:{i + 1}; batch_size:{batch_num}; loss:{loss.loss}; ')
             print('')
 
             batch_data = next(iter_data)
